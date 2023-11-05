@@ -18,10 +18,10 @@ public class TextureLoader {
             ((JPanel) game.getGui().getBoardgrid().getComponent(i)).remove(0);
             ((JPanel) game.getGui().getBoardgrid().getComponent(i)).add(new JLabel(transformimage(game.getBoard().getTiles()[i / 8][i % 8].getPieceontile().getID(), 50, 50)));
         }
-        game.getGui().getWindow().setVisible(true);
+        game.getGui().visible();
     }
 
-    public ImageIcon transformimage(String imagepath, int nwidth, int nheight) {
+    public static ImageIcon transformimage(String imagepath, int nwidth, int nheight) {
         ImageIcon imageIcon = new ImageIcon(imagepath);
         Image image = imageIcon.getImage();
         Image newimage = image.getScaledInstance(nwidth, nheight, Image.SCALE_SMOOTH);

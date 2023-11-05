@@ -5,7 +5,8 @@ import Pieces.Piece;
 import java.awt.*;
 
 public class Pawn extends Piece {
-    public Pawn(Color color, Color tilecolor) {
+    public Pawn(Color color, Color tilecolor, Point tileindex) {
+        this.tileindex = tileindex;
         this.color = color;
         this.tilecolor = tilecolor;
         if (color.equals(Color.black)) {

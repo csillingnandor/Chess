@@ -29,4 +29,8 @@ public class Tile {
     public ArrayList<Piece> getPiecesCoveringTile() {
         return PiecesCoveringTile;
     }
+
+    public boolean isEmpty() {
+        return pieceontile == null;
+    }
 }

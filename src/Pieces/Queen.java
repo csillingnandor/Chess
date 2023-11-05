@@ -3,7 +3,8 @@ package Pieces;
 import java.awt.*;
 
 public class Queen extends Piece {
-    public Queen(Color color, Color tilecolor) {
+    public Queen(Color color, Color tilecolor, Point tileindex) {
+        this.tileindex = tileindex;
         this.color = color;
         this.tilecolor = tilecolor;
         if (color.equals(Color.black)) {
