@@ -33,4 +33,8 @@ public class Tile {
     public boolean isEmpty() {
         return pieceontile == null;
     }
+
+    public boolean canSelect() {
+        return (!isEmpty() && getPieceontile().getColor().equals(Game.colorinplay));
+    }
 }

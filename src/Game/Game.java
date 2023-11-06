@@ -7,9 +7,9 @@ import java.awt.*;
 public class Game {
     private GUI gui = new GUI(this);
     private Board board = new Board();
-    private static Color colorinplay = Color.white;
     private boolean selected = false;
     private Piece selectedpiece = null;
+    public static Color colorinplay = Color.white;
     private TextureLoader textureLoader = new TextureLoader(this);
     public void start() {
         gui.initwindow();
@@ -31,6 +31,10 @@ public class Game {
 
     public Color getColorinplay() {
         return colorinplay;
+    }
+
+    public void setColorinplay(Color colorinplay) {
+        Game.colorinplay = colorinplay;
     }
 
     public boolean isSelected() {

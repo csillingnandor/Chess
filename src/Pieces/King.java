@@ -5,10 +5,9 @@ import Pieces.Piece;
 import java.awt.*;
 
 public class King extends Piece {
-    public King(Color color, Color tilecolor, Point tileindex) {
+    public King(Color color, Point tileindex) {
         this.tileindex = tileindex;
         this.color = color;
-        this.tilecolor = tilecolor;
         if (color.equals(Color.black)) {
             this.textureID = "textures/PNGs/No Shadow/128h/b_king_png_128px.png";
         }

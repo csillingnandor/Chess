@@ -79,17 +79,32 @@ public class GUI implements MouseListener{
         int y=7-e.getComponent().getY()/e.getComponent().getHeight();
         int rowidx = 7 - y;
         int colidx = x;
+        Tile clickedtile = game.getBoard().getTiles()[rowidx][colidx];
         if (!game.isSelected()) {
-            Tile clickedtile = game.getBoard().getTiles()[rowidx][colidx];
-            if (!clickedtile.isEmpty() && clickedtile.getPieceontile().getColor().equals(game.getColorinplay())) {
-                e.getComponent().setBackground(Color.cyan);
-                game.setSelected(true);
-                game.setSelectedpiece(game.getBoard().getPiece(rowidx, colidx));
+            if (clickedtile.canSelect()) {
+                selectPiece(e.getComponent(), game, rowidx, colidx);
             }
         }
         else {
-            placePiece(boardgrid, game.getSelectedpiece(), rowidx, colidx);
-            game.setSelected(false);
+            Component selectedcomponent = boardgrid.getComponent(game.getSelectedpiece().getTileindex().x * 8 + game.getSelectedpiece().getTileindex().y);
+            Color tilecolor = game.getBoard().tilecoloratposition(game.getSelectedpiece().getTileindex().x, game.getSelectedpiece().getTileindex().y);
+            if (clickedtile.canSelect()) {
+                deselectPiece(selectedcomponent, tilecolor);
+                selectPiece(e.getComponent(), game, rowidx, colidx);
+            }
+            else {
+                placePiece(boardgrid, game.getSelectedpiece(), rowidx, colidx);
+                removePiece(boardgrid, game.getSelectedpiece().getTileindex().x, game.getSelectedpiece().getTileindex().y);
+                game.getBoard().setPiece(game.getSelectedpiece(), rowidx, colidx);
+                deselectPiece(selectedcomponent, tilecolor);
+                game.setSelected(false);
+                if (game.getColorinplay().equals(Color.white)) {
+                    game.setColorinplay(Color.black);
+                }
+                else {
+                    game.setColorinplay(Color.white);
+                }
+            }
         }
         visible();
     }
@@ -117,5 +132,20 @@ public class GUI implements MouseListener{
         int component_idx = row * 8 + col;
         ((JPanel) boardgrid.getComponent(component_idx)).remove(0);
         ((JPanel) boardgrid.getComponent(component_idx)).add(new JLabel(TextureLoader.transformimage(selectedpiece.getID(), 50, 50)));
+    }
+
+    public void removePiece(JPanel boardgrid, int row, int col) {
+        int component_idx = row * 8 + col;
+        ((JPanel) boardgrid.getComponent(component_idx)).remove(0);
+    }
+
+    public void selectPiece(Component component, Game game, int row, int col) {
+        component.setBackground(Color.cyan);
+        game.setSelected(true);
+        game.setSelectedpiece(game.getBoard().getPiece(row, col));
+    }
+
+    public void deselectPiece(Component component, Color tilecolor) {
+        component.setBackground(tilecolor);
     }
 }

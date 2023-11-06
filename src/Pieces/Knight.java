@@ -5,10 +5,9 @@ import Pieces.Piece;
 import java.awt.*;
 
 public class Knight extends Piece {
-    public Knight(Color color, Color tilecolor, Point tileindex) {
+    public Knight(Color color, Point tileindex) {
         this.tileindex = tileindex;
         this.color = color;
-        this.tilecolor = tilecolor;
         if (color.equals(Color.black)) {
             this.textureID = "textures/PNGs/No Shadow/128h/b_knight_png_128px.png";
         }

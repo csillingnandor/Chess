@@ -7,10 +7,9 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Bishop extends Piece implements Piecemovement {
-    public Bishop(Color color, Color tilecolor, Point tileindex) {
+    public Bishop(Color color, Point tileindex) {
         this.tileindex = tileindex;
         this.color = color;
-        this.tilecolor = tilecolor;
         if (color.equals(Color.black)) {
             this.textureID = "textures/PNGs/No Shadow/128h/b_bishop_png_128px.png";
         }

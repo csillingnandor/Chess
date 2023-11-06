@@ -3,10 +3,9 @@ package Pieces;
 import java.awt.*;
 
 public class Queen extends Piece {
-    public Queen(Color color, Color tilecolor, Point tileindex) {
+    public Queen(Color color, Point tileindex) {
         this.tileindex = tileindex;
         this.color = color;
-        this.tilecolor = tilecolor;
         if (color.equals(Color.black)) {
             this.textureID = "textures/PNGs/No Shadow/128h/b_queen_png_128px.png";
         }
