@@ -1,11 +1,12 @@
 package Pieces;
+import Game.Board;
 import Game.Tile;
 
 import javax.swing.text.Position;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Piece {
+public abstract class Piece implements Piecemovement{
     protected int value;
     protected String textureID;
     protected Color color;
@@ -34,4 +35,11 @@ public class Piece {
     public void setTileindex(Point coordinates) {
         tileindex = coordinates;
     }
+
+    public boolean canMoveTo(Tile tile) {
+        return movabletiles.contains(tile);
+    }
+
+    @Override
+    public abstract void collectMovableTiles(Board board);
 }

@@ -13,7 +13,6 @@ public class Game {
     private TextureLoader textureLoader = new TextureLoader(this);
     public void start() {
         gui.initwindow();
-        board.SetBoard();
         textureLoader.LoadChessBoard();
     }
 

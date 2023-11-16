@@ -86,23 +86,31 @@ public class GUI implements MouseListener{
             }
         }
         else {
+            /// We save the initially selected cell's color, in case we'd like to select another piece, so we can remove the highlighting from the originally selected piece and replace it with the color of the tile
             Component selectedcomponent = boardgrid.getComponent(game.getSelectedpiece().getTileindex().x * 8 + game.getSelectedpiece().getTileindex().y);
-            Color tilecolor = game.getBoard().tilecoloratposition(game.getSelectedpiece().getTileindex().x, game.getSelectedpiece().getTileindex().y);
+            Color tilecolor = game.getBoard().tileColorAtPosition(game.getSelectedpiece().getTileindex().x, game.getSelectedpiece().getTileindex().y);
+
             if (clickedtile.canSelect()) {
                 deselectPiece(selectedcomponent, tilecolor);
                 selectPiece(e.getComponent(), game, rowidx, colidx);
             }
             else {
-                placePiece(boardgrid, game.getSelectedpiece(), rowidx, colidx);
-                removePiece(boardgrid, game.getSelectedpiece().getTileindex().x, game.getSelectedpiece().getTileindex().y);
-                game.getBoard().setPiece(game.getSelectedpiece(), rowidx, colidx);
-                deselectPiece(selectedcomponent, tilecolor);
-                game.setSelected(false);
-                if (game.getColorinplay().equals(Color.white)) {
-                    game.setColorinplay(Color.black);
-                }
-                else {
-                    game.setColorinplay(Color.white);
+                if (game.getSelectedpiece().getMovabletiles().contains(clickedtile)) {
+                    addPieceTexture(boardgrid, game.getSelectedpiece(), rowidx, colidx);
+                    removePieceTexture(boardgrid, game.getSelectedpiece().getTileindex().x, game.getSelectedpiece().getTileindex().y);
+
+                    game.getBoard().setPiece(game.getSelectedpiece(), rowidx, colidx);
+                    deselectPiece(selectedcomponent, tilecolor);
+                    game.setSelected(false);
+                    game.getBoard().updateMovableTiles();
+
+
+                    if (game.getColorinplay().equals(Color.white)) {
+                        game.setColorinplay(Color.black);
+                    }
+                    else {
+                        game.setColorinplay(Color.white);
+                    }
                 }
             }
         }
@@ -128,15 +136,16 @@ public class GUI implements MouseListener{
         window.setVisible(true);
     }
 
-    public void placePiece(JPanel boardgrid, Piece selectedpiece, int row, int col) {
+    public void addPieceTexture(JPanel boardgrid, Piece selectedpiece, int row, int col) {
         int component_idx = row * 8 + col;
         ((JPanel) boardgrid.getComponent(component_idx)).remove(0);
         ((JPanel) boardgrid.getComponent(component_idx)).add(new JLabel(TextureLoader.transformimage(selectedpiece.getID(), 50, 50)));
     }
 
-    public void removePiece(JPanel boardgrid, int row, int col) {
+    public void removePieceTexture(JPanel boardgrid, int row, int col) {
         int component_idx = row * 8 + col;
         ((JPanel) boardgrid.getComponent(component_idx)).remove(0);
+        ((JPanel) boardgrid.getComponent(component_idx)).add(new JLabel());
     }
 
     public void selectPiece(Component component, Game game, int row, int col) {

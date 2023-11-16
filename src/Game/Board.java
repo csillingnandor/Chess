@@ -1,16 +1,15 @@
 package Game;
 
-import Exceptions.RowTooLongException;
 import Pieces.*;
 
 import java.awt.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Board {
     private Tile[][] tiles = new Tile[8][8];
-    public void SetBoard() {
+    private ArrayList<Piece> piecesinplay;
+    public Board() {
+        piecesinplay = new ArrayList<>();
         int a = 0;
         int b = 1;
         for (int i = 0; i < 8; i++) {
@@ -62,16 +61,37 @@ public class Board {
         tiles[6][5].setPieceontile(new Pawn(Color.white, new Point(6, 5)));
         tiles[6][6].setPieceontile(new Pawn(Color.white, new Point(6, 6)));
         tiles[6][7].setPieceontile(new Pawn(Color.white, new Point(6, 7)));
+        collectPiecesInPlay();
+        updateMovableTiles();
+    }
+    public void collectPiecesInPlay() {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (tiles[i][j].getPieceontile() != null) {
+                    piecesinplay.add(tiles[i][j].getPieceontile());
+                }
+            }
+        }
+    }
+
+    public void updateMovableTiles() {
+        for (Piece piece: piecesinplay) {
+            piece.collectMovableTiles(this);
+        }
     }
 
     public Tile[][] getTiles() {
         return tiles;
     }
 
-    public Color coloratposition(int x, int y) {
+    public Tile getTileAt(int x, int y) {
+        return getTiles()[x][y];
+    }
+
+    public Color colorAtPosition(int x, int y) {
         return tiles[x][y].getPieceontile().getColor();
     }
-    public Color tilecoloratposition(int x, int y) {
+    public Color tileColorAtPosition(int x, int y) {
         return tiles[x][y].getColor();
     }
 
@@ -79,8 +99,29 @@ public class Board {
         return getTiles()[x][y].getPieceontile();
     }
 
-    public void setPiece(Piece piece, int x, int y) {
-        getTiles()[x][y].setPieceontile(piece);
-        piece.setTileindex(new Point(x, y));
+    public void setPiece(Piece selectedPiece, int x, int y) {
+        Piece pieceOnTile = getTileAt(x, y).getPieceontile();
+        removePiece(pieceOnTile);
+        getTileAt(selectedPiece.getrow(), selectedPiece.getcol()).setPieceontile(null);
+        getTileAt(x, y).setPieceontile(selectedPiece);
+        selectedPiece.setTileindex(new Point(x, y));
+    }
+
+    public void removePiece(Piece piece) {
+        if (piece != null) {
+            int x = piece.getrow();
+            int y = piece.getcol();
+            getTileAt(x, y).setPieceontile(null);
+            piecesinplay.remove(piece);
+        }
+    }
+
+    public boolean isTileInsideBounds(int x, int y) {
+        if (x >= 0 && x <= 7 && y >= 0 && y <= 7) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

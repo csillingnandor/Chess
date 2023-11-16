@@ -8,7 +8,6 @@ import java.util.ArrayList;
 public class Tile {
     private Color color;
     private Piece pieceontile;
-    private ArrayList<Piece> PiecesCoveringTile = new ArrayList<>();
 
     public Color getColor() {
         return color;
@@ -24,10 +23,6 @@ public class Tile {
 
     public void setColor(Color color) {
         this.color = color;
-    }
-
-    public ArrayList<Piece> getPiecesCoveringTile() {
-        return PiecesCoveringTile;
     }
 
     public boolean isEmpty() {
