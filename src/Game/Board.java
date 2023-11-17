@@ -4,12 +4,22 @@ import Pieces.*;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Board {
-    private Tile[][] tiles = new Tile[8][8];
-    private ArrayList<Piece> piecesinplay;
+    private Tile[][] tiles;
+    private ArrayList<Piece> piecesInPlay;
+    private ArrayList<Piece> w_Pieces;
+    private ArrayList<Piece> b_Pieces;
+    private ArrayList<Piece> w_PiecesTargetingKing;
+    private ArrayList<Piece> b_PiecesTargetingKing;
     public Board() {
-        piecesinplay = new ArrayList<>();
+        tiles = new Tile[8][8];
+        piecesInPlay = new ArrayList<>();
+        w_Pieces = new ArrayList<>();
+        b_Pieces = new ArrayList<>();
+        w_PiecesTargetingKing = new ArrayList<>();
+        b_PiecesTargetingKing = new ArrayList<>();
         int a = 0;
         int b = 1;
         for (int i = 0; i < 8; i++) {
@@ -21,6 +31,7 @@ public class Board {
                 else {
                     tiles[i][j].setColor(Color.white);
                 }
+                tiles[i][j].setPosition(new Point(i, j));
             }
             int temp = a;
             a = b;
@@ -68,16 +79,61 @@ public class Board {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (tiles[i][j].getPieceontile() != null) {
-                    piecesinplay.add(tiles[i][j].getPieceontile());
+                    piecesInPlay.add(tiles[i][j].getPieceontile());
+                    if (tiles[i][j].getPieceontile().getColor().equals(Color.white)) {
+                        w_Pieces.add(tiles[i][j].getPieceontile());
+                    }
+                    else {
+                        b_Pieces.add(tiles[i][j].getPieceontile());
+                    }
                 }
             }
         }
     }
 
     public void updateMovableTiles() {
-        for (Piece piece: piecesinplay) {
+        for (Piece piece: piecesInPlay) {
             piece.collectMovableTiles(this);
         }
+
+
+
+
+//        if (Game.colorinplay.equals(Color.white)) {
+//            ArrayList<Piece> w_Pieces_copy = new ArrayList<>(w_Pieces);
+//            for (Iterator<Piece> pieceIterator = w_Pieces_copy.iterator(); pieceIterator.hasNext();) {
+//                Piece w_piece = pieceIterator.next();
+//                for (Tile tile: w_piece.getMovableTiles()) {
+//                    Board board_copy = this;
+//                    ArrayList<Piece> b_Pieces_copy = b_Pieces;
+//                    board_copy.setPiece(w_piece, tile.getX(), tile.getY());
+//                    for (Piece b_piece : b_Pieces_copy) {
+//                        b_piece.collectMovableTiles(board_copy);
+//                    }
+//                    if (b_PiecesTargetingKing.isEmpty()) {
+//                        w_piece.getLegalMoves().add(tile);
+//                    }
+//                }
+//            }
+//        }
+//        else {
+//            ArrayList<Piece> b_Pieces_copy = new ArrayList<>(b_Pieces);
+//            for (Iterator<Piece> pieceIterator = b_Pieces_copy.iterator(); pieceIterator.hasNext();) {
+//                Piece b_piece = pieceIterator.next();
+//                for (Tile tile: b_piece.getMovableTiles()) {
+//                    Board board_copy = this;
+//                    ArrayList<Piece> w_Pieces_copy = w_Pieces;
+//                    board_copy.setPiece(b_piece, tile.getX(), tile.getY());
+//                    for (Piece w_piece: w_Pieces_copy) {
+//                        w_piece.collectMovableTiles(board_copy);
+//                    }
+//                    if (w_PiecesTargetingKing.isEmpty()) {
+//                        b_piece.getLegalMoves().add(tile);
+//                    }
+//                }
+//            }
+//
+//        }
     }
 
     public Tile[][] getTiles() {
@@ -112,7 +168,13 @@ public class Board {
             int x = piece.getrow();
             int y = piece.getcol();
             getTileAt(x, y).setPieceontile(null);
-            piecesinplay.remove(piece);
+            piecesInPlay.remove(piece);
+            if (piece.getColor().equals(Color.white)) {
+                w_Pieces.remove(piece);
+            }
+            else {
+                b_Pieces.remove(piece);
+            }
         }
     }
 
@@ -122,6 +184,27 @@ public class Board {
         }
         else {
             return false;
+        }
+    }
+
+    public ArrayList<Piece> getB_PiecesTargetingKing() {
+        return b_PiecesTargetingKing;
+    }
+
+    public ArrayList<Piece> getW_PiecesTargetingKing() {
+        return w_PiecesTargetingKing;
+    }
+
+    public boolean isKingOnTile(Tile tile) {
+        return tile.getPieceontile().getClass().equals(King.class);
+    }
+
+    public boolean isKingInCheck(Color color) {
+        if (color.equals(Color.black)) {
+            return !w_PiecesTargetingKing.isEmpty();
+        }
+        else {
+            return !b_PiecesTargetingKing.isEmpty();
         }
     }
 }

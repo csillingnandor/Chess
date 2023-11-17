@@ -17,7 +17,8 @@ public class Bishop extends Piece {
             this.textureID = "textures/PNGs/No Shadow/128h/w_bishop_png_128px.png";
         }
         this.value = 3;
-        movabletiles = new ArrayList<>();
+        movableTiles = new ArrayList<>();
+        legalMoves = new ArrayList<>();
     }
 
     @Override
@@ -29,7 +30,7 @@ public class Bishop extends Piece {
         bishopTraverse(board, tiles, x, y, 1, -1);
         bishopTraverse(board, tiles, x, y, -1, 1);
         bishopTraverse(board, tiles, x, y, -1, -1);
-        movabletiles = tiles;
+        movableTiles = tiles;
 
     }
 
@@ -40,8 +41,18 @@ public class Bishop extends Piece {
                 if (board.getTileAt(x + dirx, y + diry).isEmpty()) {
                     tiles.add(board.getTileAt(x + dirx, y + diry));
                     bishopTraverse(board, tiles, x + dirx, y + diry, dirx, diry);
-                } else if (!board.getTileAt(x + dirx, y + diry).getPieceontile().getColor().equals(color)) {
-                    tiles.add(board.getTileAt(x + dirx, y + diry));
+                } else if (!board.getPiece(x + dirx, y + diry).getColor().equals(color)) {
+                    if (board.isKingOnTile(board.getTileAt(x + dirx, y + diry))) {
+                        if (color.equals(Color.black)) {
+                            board.getB_PiecesTargetingKing().add(this);
+                        }
+                        else {
+                            board.getW_PiecesTargetingKing().add(this);
+                        }
+                    }
+                    else {
+                        tiles.add(board.getTileAt(x + dirx, y + diry));
+                    }
                 }
             }
         } catch (IndexOutOfBoundsException ignored){

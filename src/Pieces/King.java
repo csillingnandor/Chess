@@ -2,13 +2,11 @@ package Pieces;
 
 import Game.Board;
 import Game.Tile;
-import Pieces.Piece;
 
 import java.awt.*;
 import java.util.ArrayList;
 
 public class King extends Piece {
-    ArrayList<Piece> piecesTargetingKing;
     public King(Color color, Point tileindex) {
         this.tileindex = tileindex;
         this.color = color;
@@ -19,8 +17,8 @@ public class King extends Piece {
             this.textureID = "textures/PNGs/No Shadow/128h/w_king_png_128px.png";
         }
         this.value = 0;
-        movabletiles = new ArrayList<>();
-        piecesTargetingKing = new ArrayList<>();
+        movableTiles = new ArrayList<>();
+        legalMoves = new ArrayList<>();
     }
 
     @Override
@@ -42,8 +40,7 @@ public class King extends Piece {
                 }
             }
         }
-        movabletiles = tiles;
+        movableTiles = tiles;
     }
-
 
 }

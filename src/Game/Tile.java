@@ -2,13 +2,16 @@ package Game;
 
 import Pieces.Piece;
 
+import javax.swing.text.Position;
 import java.awt.*;
 import java.util.ArrayList;
 
 public class Tile {
     private Color color;
     private Piece pieceontile;
+    private Point position;
 
+    public Tile() {}
     public Color getColor() {
         return color;
     }
@@ -31,5 +34,20 @@ public class Tile {
 
     public boolean canSelect() {
         return (!isEmpty() && getPieceontile().getColor().equals(Game.colorinplay));
+    }
+
+    public Point getPosition() {
+        return position;
+    }
+
+    public int getX() {
+        return position.x;
+    }
+    public int getY() {
+        return position.y;
+    }
+
+    public void setPosition(Point position) {
+        this.position = position;
     }
 }

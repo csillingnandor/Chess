@@ -51,4 +51,8 @@ public class Game {
     public void setSelected(boolean selected) {
         this.selected = selected;
     }
+
+    public boolean canMoveTo(Tile tile) {
+        return selectedpiece.getMovableTiles().contains(tile);
+    }
 }

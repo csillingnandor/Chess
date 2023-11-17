@@ -17,7 +17,8 @@ public class Queen extends Piece {
             this.textureID = "textures/PNGs/No Shadow/128h/w_queen_png_128px.png";
         }
         this.value = 9;
-        movabletiles = new ArrayList<>();
+        movableTiles = new ArrayList<>();
+        legalMoves = new ArrayList<>();
     }
 
     @Override
@@ -35,7 +36,7 @@ public class Queen extends Piece {
         queenTraverse(board, tiles, x, y, -1, 0);
         queenTraverse(board, tiles, x, y, 0, 1);
         queenTraverse(board, tiles, x, y, 0, -1);
-        movabletiles = tiles;
+        movableTiles = tiles;
     }
 
     private void queenTraverse(Board board, ArrayList<Tile> tiles, int x, int y, int dirx, int diry) {
@@ -45,7 +46,17 @@ public class Queen extends Piece {
                     tiles.add(board.getTileAt(x + dirx, y + diry));
                     queenTraverse(board, tiles, x + dirx, y + diry, dirx, diry);
                 } else if (!board.getTileAt(x + dirx, y + diry).getPieceontile().getColor().equals(color)) {
-                    tiles.add(board.getTileAt(x + dirx, y + diry));
+                    if (board.isKingOnTile(board.getTileAt(x + dirx, y + diry))) {
+                        if (color.equals(Color.black)) {
+                            board.getB_PiecesTargetingKing().add(this);
+                        }
+                        else {
+                            board.getW_PiecesTargetingKing().add(this);
+                        }
+                    }
+                    else {
+                        tiles.add(board.getTileAt(x + dirx, y + diry));
+                    }
                 }
             }
         } catch (IndexOutOfBoundsException ignored){

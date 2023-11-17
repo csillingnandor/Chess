@@ -17,7 +17,8 @@ public class Rook extends Piece {
             this.textureID = "textures/PNGs/No Shadow/128h/w_rook_png_128px.png";
         }
         this.value = 5;
-        movabletiles = new ArrayList<>();
+        movableTiles = new ArrayList<>();
+        legalMoves = new ArrayList<>();
     }
 
     @Override
@@ -29,7 +30,7 @@ public class Rook extends Piece {
         rookTraverse(board, tiles, x, y, -1, 0);
         rookTraverse(board, tiles, x, y, 0, 1);
         rookTraverse(board, tiles, x, y, 0, -1);
-        movabletiles = tiles;
+        movableTiles = tiles;
     }
 
     private void rookTraverse(Board board, ArrayList<Tile> tiles, int x, int y, int dirx, int diry) {
@@ -39,7 +40,17 @@ public class Rook extends Piece {
                     tiles.add(board.getTileAt(x + dirx, y + diry));
                     rookTraverse(board, tiles, x + dirx, y + diry, dirx, diry);
                 } else if (!board.getTileAt(x + dirx, y + diry).getPieceontile().getColor().equals(color)) {
-                    tiles.add(board.getTileAt(x + dirx, y + diry));
+                    if (board.isKingOnTile(board.getTileAt(x + dirx, y + diry))) {
+                        if (color.equals(Color.black)) {
+                            board.getB_PiecesTargetingKing().add(this);
+                        }
+                        else {
+                            board.getW_PiecesTargetingKing().add(this);
+                        }
+                    }
+                    else {
+                        tiles.add(board.getTileAt(x + dirx, y + diry));
+                    }
                 }
             }
         } catch (IndexOutOfBoundsException ignored){

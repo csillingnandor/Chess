@@ -2,7 +2,6 @@ package Pieces;
 import Game.Board;
 import Game.Tile;
 
-import javax.swing.text.Position;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -11,7 +10,8 @@ public abstract class Piece implements Piecemovement{
     protected String textureID;
     protected Color color;
     protected Point tileindex;
-    protected ArrayList<Tile> movabletiles;
+    protected ArrayList<Tile> movableTiles;
+    protected ArrayList<Tile> legalMoves;
     public String getID() {
         return textureID;
     }
@@ -20,7 +20,7 @@ public abstract class Piece implements Piecemovement{
     }
     public Color getColor() { return color; }
 
-    public ArrayList<Tile> getMovabletiles() { return movabletiles; }
+    public ArrayList<Tile> getMovableTiles() { return movableTiles; }
 
     public int getrow() {
         return tileindex.x;
@@ -37,9 +37,17 @@ public abstract class Piece implements Piecemovement{
     }
 
     public boolean canMoveTo(Tile tile) {
-        return movabletiles.contains(tile);
+        return movableTiles.contains(tile);
     }
 
     @Override
     public abstract void collectMovableTiles(Board board);
+
+    public ArrayList<Tile> getLegalMoves() {
+        return legalMoves;
+    }
+
+    public void setLegalMoves(ArrayList<Tile> legalMoves) {
+        this.legalMoves = legalMoves;
+    }
 }

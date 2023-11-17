@@ -2,7 +2,6 @@ package Pieces;
 
 import Game.Board;
 import Game.Tile;
-import Pieces.Piece;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -18,7 +17,8 @@ public class Pawn extends Piece {
             this.textureID = "textures/PNGs/No Shadow/128h/w_pawn_png_128px.png";
         }
         this.value = 1;
-        movabletiles = new ArrayList<>();
+        movableTiles = new ArrayList<>();
+        legalMoves = new ArrayList<>();
     }
 
     @Override
@@ -39,15 +39,35 @@ public class Pawn extends Piece {
             }
             if (board.isTileInsideBounds(x + 1, y + 1)) {
                 if (!board.getTileAt(x + 1, y + 1).isEmpty()) {
-                    if (!board.getPiece(x + 1, y + 1).getColor().equals(color)) {
-                        tiles.add(board.getTileAt(x + 1, y + 1));
+                    if (!board.colorAtPosition(x + 1, y + 1).equals(color)) {
+                        if (board.isKingOnTile(board.getTileAt(x + 1, y + 1))) {
+                            if (color.equals(Color.black)) {
+                                board.getB_PiecesTargetingKing().add(this);
+                            }
+                            else {
+                                board.getW_PiecesTargetingKing().add(this);
+                            }
+                        }
+                        else {
+                            tiles.add(board.getTileAt(x + 1, y + 1));
+                        }
                     }
                 }
             }
             if (board.isTileInsideBounds(x + 1, y - 1)) {
                 if (!board.getTileAt(x + 1, y - 1).isEmpty()) {
-                    if (!board.getPiece(x + 1, y - 1).getColor().equals(color)) {
-                        tiles.add(board.getTileAt(x + 1, y - 1));
+                    if (!board.colorAtPosition(x + 1, y - 1).equals(color)) {
+                        if (board.isKingOnTile(board.getTileAt(x + 1, y - 1))) {
+                            if (color.equals(Color.black)) {
+                                board.getB_PiecesTargetingKing().add(this);
+                            }
+                            else {
+                                board.getW_PiecesTargetingKing().add(this);
+                            }
+                        }
+                        else {
+                            tiles.add(board.getTileAt(x + 1, y - 1));
+                        }
                     }
                 }
             }
@@ -65,19 +85,39 @@ public class Pawn extends Piece {
             }
             if (board.isTileInsideBounds(x - 1, y + 1)) {
                 if (!board.getTileAt(x - 1, y + 1).isEmpty()) {
-                    if (!board.getPiece(x - 1, y + 1).getColor().equals(color)) {
-                        tiles.add(board.getTileAt(x - 1, y + 1));
+                    if (!board.colorAtPosition(x - 1, y + 1).equals(color)) {
+                        if (board.isKingOnTile(board.getTileAt(x - 1, y + 1))) {
+                            if (color.equals(Color.black)) {
+                                board.getB_PiecesTargetingKing().add(this);
+                            }
+                            else {
+                                board.getW_PiecesTargetingKing().add(this);
+                            }
+                        }
+                        else {
+                            tiles.add(board.getTileAt(x - 1, y + 1));
+                        }
                     }
                 }
             }
             if (board.isTileInsideBounds(x - 1, y - 1)) {
                 if (!board.getTileAt(x - 1, y - 1).isEmpty()) {
-                    if (!board.getPiece(x - 1, y - 1).getColor().equals(color)) {
-                        tiles.add(board.getTileAt(x - 1, y - 1));
+                    if (!board.colorAtPosition(x - 1, y - 1).equals(color)) {
+                        if (board.isKingOnTile(board.getTileAt(x - 1, y - 1))) {
+                            if (color.equals(Color.black)) {
+                                board.getB_PiecesTargetingKing().add(this);
+                            }
+                            else {
+                                board.getW_PiecesTargetingKing().add(this);
+                            }
+                        }
+                        else {
+                            tiles.add(board.getTileAt(x - 1, y - 1));
+                        }
                     }
                 }
             }
         }
-        movabletiles = tiles;
+        movableTiles = tiles;
     }
 }

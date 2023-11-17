@@ -79,9 +79,9 @@ public class GUI implements MouseListener{
         int y=7-e.getComponent().getY()/e.getComponent().getHeight();
         int rowidx = 7 - y;
         int colidx = x;
-        Tile clickedtile = game.getBoard().getTiles()[rowidx][colidx];
+        Tile clickedTile = game.getBoard().getTiles()[rowidx][colidx];
         if (!game.isSelected()) {
-            if (clickedtile.canSelect()) {
+            if (clickedTile.canSelect()) {
                 selectPiece(e.getComponent(), game, rowidx, colidx);
             }
         }
@@ -90,12 +90,12 @@ public class GUI implements MouseListener{
             Component selectedcomponent = boardgrid.getComponent(game.getSelectedpiece().getTileindex().x * 8 + game.getSelectedpiece().getTileindex().y);
             Color tilecolor = game.getBoard().tileColorAtPosition(game.getSelectedpiece().getTileindex().x, game.getSelectedpiece().getTileindex().y);
 
-            if (clickedtile.canSelect()) {
+            if (clickedTile.canSelect()) {
                 deselectPiece(selectedcomponent, tilecolor);
                 selectPiece(e.getComponent(), game, rowidx, colidx);
             }
             else {
-                if (game.getSelectedpiece().getMovabletiles().contains(clickedtile)) {
+                if (game.canMoveTo(clickedTile)) {
                     addPieceTexture(boardgrid, game.getSelectedpiece(), rowidx, colidx);
                     removePieceTexture(boardgrid, game.getSelectedpiece().getTileindex().x, game.getSelectedpiece().getTileindex().y);
 
