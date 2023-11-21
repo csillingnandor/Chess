@@ -50,4 +50,5 @@ public abstract class Piece implements Piecemovement{
     public void setLegalMoves(ArrayList<Tile> legalMoves) {
         this.legalMoves = legalMoves;
     }
+
 }

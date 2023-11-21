@@ -75,24 +75,23 @@ public class GUI implements MouseListener{
 
     @Override
     public void mousePressed(MouseEvent e) {
-        int x=e.getComponent().getX()/e.getComponent().getWidth();
-        int y=7-e.getComponent().getY()/e.getComponent().getHeight();
+        int x = e.getComponent().getX()/e.getComponent().getWidth();
+        int y = 7-e.getComponent().getY()/e.getComponent().getHeight();
         int rowidx = 7 - y;
         int colidx = x;
         Tile clickedTile = game.getBoard().getTiles()[rowidx][colidx];
         if (!game.isSelected()) {
             if (clickedTile.canSelect()) {
                 selectPiece(e.getComponent(), game, rowidx, colidx);
+                highLightMovableTiles(game.getSelectedpiece());
             }
         }
         else {
-            /// We save the initially selected cell's color, in case we'd like to select another piece, so we can remove the highlighting from the originally selected piece and replace it with the color of the tile
-            Component selectedcomponent = boardgrid.getComponent(game.getSelectedpiece().getTileindex().x * 8 + game.getSelectedpiece().getTileindex().y);
-            Color tilecolor = game.getBoard().tileColorAtPosition(game.getSelectedpiece().getTileindex().x, game.getSelectedpiece().getTileindex().y);
 
             if (clickedTile.canSelect()) {
-                deselectPiece(selectedcomponent, tilecolor);
+                resetBoardColors();
                 selectPiece(e.getComponent(), game, rowidx, colidx);
+                highLightMovableTiles(game.getSelectedpiece());
             }
             else {
                 if (game.canMoveTo(clickedTile)) {
@@ -100,9 +99,8 @@ public class GUI implements MouseListener{
                     removePieceTexture(boardgrid, game.getSelectedpiece().getTileindex().x, game.getSelectedpiece().getTileindex().y);
 
                     game.getBoard().setPiece(game.getSelectedpiece(), rowidx, colidx);
-                    deselectPiece(selectedcomponent, tilecolor);
+                    resetBoardColors();
                     game.setSelected(false);
-                    game.getBoard().updateMovableTiles();
 
 
                     if (game.getColorinplay().equals(Color.white)) {
@@ -111,6 +109,8 @@ public class GUI implements MouseListener{
                     else {
                         game.setColorinplay(Color.white);
                     }
+                    game.getBoard().updateMovableTiles();
+
                 }
             }
         }
@@ -154,7 +154,15 @@ public class GUI implements MouseListener{
         game.setSelectedpiece(game.getBoard().getPiece(row, col));
     }
 
-    public void deselectPiece(Component component, Color tilecolor) {
-        component.setBackground(tilecolor);
+    public void resetBoardColors() {
+        for (int i = 0; i < 64; i++) {
+            getBoardgrid().getComponent(i).setBackground(game.getBoard().tileColorAtPosition(i / 8, i % 8));
+        }
+    }
+
+    public void highLightMovableTiles(Piece piece) {
+        for (Tile tile: piece.getLegalMoves()) {
+            getBoardgrid().getComponent(tile.getX() * 8 + tile.getY()).setBackground(Color.red);
+        }
     }
 }

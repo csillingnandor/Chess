@@ -53,6 +53,6 @@ public class Game {
     }
 
     public boolean canMoveTo(Tile tile) {
-        return selectedpiece.getMovableTiles().contains(tile);
+        return selectedpiece.getLegalMoves().contains(tile);
     }
 }
