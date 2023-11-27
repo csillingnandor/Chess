@@ -41,7 +41,7 @@ public class Bishop extends Piece {
                 if (board.getTileAt(x + dirx, y + diry).isEmpty()) {
                     tiles.add(board.getTileAt(x + dirx, y + diry));
                     bishopTraverse(board, tiles, x + dirx, y + diry, dirx, diry);
-                } else if (!board.getPiece(x + dirx, y + diry).getColor().equals(color)) {
+                } else if (!board.getPieceAt(x + dirx, y + diry).getColor().equals(color)) {
                     if (board.isKingOnTile(board.getTileAt(x + dirx, y + diry))) {
                         if (color.equals(Color.black)) {
                             board.getB_PiecesTargetingKing().add(this);

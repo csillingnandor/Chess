@@ -4,9 +4,10 @@ import Pieces.Piece;
 
 import javax.swing.text.Position;
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Tile {
+public class Tile implements Serializable {
     private Color color;
     private Piece pieceontile;
     private Point position;

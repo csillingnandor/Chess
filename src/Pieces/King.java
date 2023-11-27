@@ -35,7 +35,19 @@ public class King extends Piece {
                     if (board.getTileAt(x + i, y + j).isEmpty()) {
                         tiles.add(board.getTileAt(x + i, y + j));
                     } else if (!board.getTileAt(x + i, y + j).getPieceontile().getColor().equals(color)) {
-                        tiles.add(board.getTileAt(x + i, y + j));
+                        if (board.getPieceAt(x + i, y + j).getClass().equals(King.class)) {
+                            if (color.equals(Color.black)) {
+                                board.getB_PiecesTargetingKing().add(this);
+                                board.getW_PiecesTargetingKing().add(board.getPieceAt(x + i, y + j));
+                            }
+                            else {
+                                board.getW_PiecesTargetingKing().add(this);
+                                board.getB_PiecesTargetingKing().add(board.getPieceAt(x + i, y + j));
+                            }
+                        }
+                        else {
+                            tiles.add(board.getTileAt(x + i, y + j));
+                        }
                     }
                 }
             }

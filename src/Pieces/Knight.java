@@ -35,7 +35,7 @@ public class Knight extends Piece {
                     if (board.getTileAt(x + vertical[i], y - 1).isEmpty()) {
                         tiles.add(board.getTileAt(x + vertical[i], y - 1));
                     } else if (!board.getTileAt(x + vertical[i], y - 1).getPieceontile().getColor().equals(color)) {
-                        if (board.getPiece(x + vertical[i], y - 1).getClass().equals(King.class)) {
+                        if (board.getPieceAt(x + vertical[i], y - 1).getClass().equals(King.class)) {
                             if (color.equals(Color.black)) {
                                 board.getB_PiecesTargetingKing().add(this);
                             }

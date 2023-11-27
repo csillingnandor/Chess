@@ -104,7 +104,7 @@ public class Board {
                     b_PiecesTargetingKing.clear();
                     Piece removedPiece = null;
                     if (!getTileAt(tile.getX(), tile.getY()).isEmpty()) {
-                        removedPiece = getPiece(tile.getX(), tile.getY());
+                        removedPiece = getPieceAt(tile.getX(), tile.getY());
                     }
                     setPiece(piece, tile.getX(), tile.getY());
                     collectTiles(Color.black);
@@ -122,7 +122,7 @@ public class Board {
                     w_PiecesTargetingKing.clear();
                     Piece removedPiece = null;
                     if (!getTileAt(tile.getX(), tile.getY()).isEmpty()) {
-                        removedPiece = getPiece(tile.getX(), tile.getY());
+                        removedPiece = getPieceAt(tile.getX(), tile.getY());
                     }
                     setPiece(piece, tile.getX(), tile.getY());
                     collectTiles(Color.white);
@@ -161,7 +161,7 @@ public class Board {
         return tiles[x][y].getColor();
     }
 
-    public Piece getPiece(int x, int y) {
+    public Piece getPieceAt(int x, int y) {
         return getTiles()[x][y].getPieceontile();
     }
 
@@ -218,11 +218,6 @@ public class Board {
         }
     }
 
-    public Board deepCopy() {
-        Board newBoard = new Board();
-        return newBoard;
-    }
-
     public void collectTiles(Color color) {
         if (color.equals(Color.white)) {
             for (Piece piece: w_Pieces) {
@@ -233,6 +228,48 @@ public class Board {
             for (Piece piece: b_Pieces) {
                 piece.collectMovableTiles(this);
             }
+        }
+        public boolean isMate() {
+            if (isKingInCheck(Game.colorinplay)) {
+                if (Game.colorinplay.equals(Color.white)) {
+                    if (hasMovableTiles(w_Pieces)) {
+                        return false;
+                    }
+                }
+                else {
+                    if (hasMovableTiles(b_Pieces)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
+        public boolean isStalemate() {
+            if (!isKingInCheck(Game.colorinplay)) {
+                if (Game.colorinplay.equals(Color.white)) {
+                    if (hasMovableTiles(w_Pieces)) {
+                        return false;
+                    }
+                }
+                else {
+                    if (hasMovableTiles(b_Pieces)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
+        private boolean hasMovableTiles(ArrayList<Piece> pieces) {
+            for (Piece piece: pieces) {
+                if (!piece.getLegalMoves().isEmpty()) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 

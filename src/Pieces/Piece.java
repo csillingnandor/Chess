@@ -3,9 +3,10 @@ import Game.Board;
 import Game.Tile;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public abstract class Piece implements Piecemovement{
+public abstract class Piece implements Piecemovement, Serializable {
     protected int value;
     protected String textureID;
     protected Color color;

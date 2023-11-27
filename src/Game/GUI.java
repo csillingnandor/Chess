@@ -7,11 +7,11 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class GUI implements MouseListener{
+public class GUI implements MouseListener {
     private Game game;
     private JFrame window;
-    private JPanel boardgrid;
-    private JPanel buttongrid;
+    private JPanel boardGrid;
+    private ButtonPanel buttonGrid;
     int width, height;
     public GUI(Game game) {
         this.game = game;
@@ -28,15 +28,15 @@ public class GUI implements MouseListener{
         return window;
     }
 
-    public JPanel getBoardgrid() {
-        return boardgrid;
+    public JPanel getBoardGrid() {
+        return boardGrid;
     }
 
     public void initwindow() {
         window = new JFrame("Chess");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        boardgrid = new JPanel(new GridLayout(8, 8));
+        boardGrid = new JPanel(new GridLayout(8, 8));
         int a = 0;
         int b = 1;
         for (int i = 0; i < 64; i++) {
@@ -54,18 +54,17 @@ public class GUI implements MouseListener{
                 b = temp;
             }
             cell.addMouseListener(this);
-            boardgrid.add(cell);
+            boardGrid.add(cell);
         }
-        buttongrid = new JPanel(new GridLayout(4, 1));
-        buttongrid.add(new JButton("text1"));
-        buttongrid.add(new JButton("text2"));
-
-        window.add(boardgrid);
-        window.add(buttongrid, BorderLayout.EAST);
+        buttonGrid = new ButtonPanel(game);
+        buttonGrid.init();
+        window.add(boardGrid);
         window.setSize(width, height);
-        window.getContentPane().setPreferredSize(new Dimension(800, 700));
+        window.getContentPane().setPreferredSize(new Dimension(900, 600));
         visible();
     }
+
+//    public void colorBoard()
 
 
     @Override
@@ -73,48 +72,54 @@ public class GUI implements MouseListener{
 
     }
 
+
     @Override
     public void mousePressed(MouseEvent e) {
-        int x = e.getComponent().getX()/e.getComponent().getWidth();
-        int y = 7-e.getComponent().getY()/e.getComponent().getHeight();
-        int rowidx = 7 - y;
-        int colidx = x;
-        Tile clickedTile = game.getBoard().getTiles()[rowidx][colidx];
-        if (!game.isSelected()) {
-            if (clickedTile.canSelect()) {
-                selectPiece(e.getComponent(), game, rowidx, colidx);
-                highLightMovableTiles(game.getSelectedpiece());
-            }
-        }
-        else {
+        if (!game.isGameOver()) {
 
-            if (clickedTile.canSelect()) {
-                resetBoardColors();
-                selectPiece(e.getComponent(), game, rowidx, colidx);
-                highLightMovableTiles(game.getSelectedpiece());
-            }
-            else {
-                if (game.canMoveTo(clickedTile)) {
-                    addPieceTexture(boardgrid, game.getSelectedpiece(), rowidx, colidx);
-                    removePieceTexture(boardgrid, game.getSelectedpiece().getTileindex().x, game.getSelectedpiece().getTileindex().y);
+            int x = e.getComponent().getX() / e.getComponent().getWidth();
+            int y = 7 - e.getComponent().getY() / e.getComponent().getHeight();
+            int rowidx = 7 - y;
+            int colidx = x;
+            Tile clickedTile = game.getBoard().getTiles()[rowidx][colidx];
+            if (!game.isSelected()) {
+                if (clickedTile.canSelect()) {
+                    selectPiece(e.getComponent(), game, rowidx, colidx);
+                    highLightMovableTiles(game.getSelectedpiece());
+                }
+            } else {
 
-                    game.getBoard().setPiece(game.getSelectedpiece(), rowidx, colidx);
+                if (clickedTile.canSelect()) {
                     resetBoardColors();
-                    game.setSelected(false);
+                    selectPiece(e.getComponent(), game, rowidx, colidx);
+                    highLightMovableTiles(game.getSelectedpiece());
+                } else {
+                    if (game.canMoveTo(clickedTile)) {
+                        addPieceTexture(boardGrid, game.getSelectedpiece(), rowidx, colidx);
+                        removePieceTexture(boardGrid, game.getSelectedpiece().getTileindex().x, game.getSelectedpiece().getTileindex().y);
+
+                        game.getBoard().setPiece(game.getSelectedpiece(), rowidx, colidx);
+                        resetBoardColors();
+                        game.setSelected(false);
 
 
-                    if (game.getColorinplay().equals(Color.white)) {
-                        game.setColorinplay(Color.black);
+                        if (game.getColorinplay().equals(Color.white)) {
+                            game.setColorinplay(Color.black);
+                        } else {
+                            game.setColorinplay(Color.white);
+                        }
+                        game.getBoard().updateMovableTiles();
+
                     }
-                    else {
-                        game.setColorinplay(Color.white);
-                    }
-                    game.getBoard().updateMovableTiles();
-
                 }
             }
+            if (game.getBoard().isMate()) {
+                game.end("Checkmate");
+            } else if (game.getBoard().isStalemate()) {
+                game.end("Stalemate");
+            }
+            visible();
         }
-        visible();
     }
 
     @Override
@@ -139,7 +144,7 @@ public class GUI implements MouseListener{
     public void addPieceTexture(JPanel boardgrid, Piece selectedpiece, int row, int col) {
         int component_idx = row * 8 + col;
         ((JPanel) boardgrid.getComponent(component_idx)).remove(0);
-        ((JPanel) boardgrid.getComponent(component_idx)).add(new JLabel(TextureLoader.transformimage(selectedpiece.getID(), 50, 50)));
+        ((JPanel) boardgrid.getComponent(component_idx)).add(new JLabel(TextureLoader.transformImage(selectedpiece.getID(), 50, 50)));
     }
 
     public void removePieceTexture(JPanel boardgrid, int row, int col) {
@@ -151,18 +156,36 @@ public class GUI implements MouseListener{
     public void selectPiece(Component component, Game game, int row, int col) {
         component.setBackground(Color.cyan);
         game.setSelected(true);
-        game.setSelectedpiece(game.getBoard().getPiece(row, col));
+        game.setSelectedpiece(game.getBoard().getPieceAt(row, col));
     }
 
     public void resetBoardColors() {
         for (int i = 0; i < 64; i++) {
-            getBoardgrid().getComponent(i).setBackground(game.getBoard().tileColorAtPosition(i / 8, i % 8));
+            getBoardGrid().getComponent(i).setBackground(game.getBoard().tileColorAtPosition(i / 8, i % 8));
         }
     }
 
     public void highLightMovableTiles(Piece piece) {
         for (Tile tile: piece.getLegalMoves()) {
-            getBoardgrid().getComponent(tile.getX() * 8 + tile.getY()).setBackground(Color.red);
+            getBoardGrid().getComponent(tile.getX() * 8 + tile.getY()).setBackground(Color.red);
+        }
+    }
+
+    public void rePaintBoard() {
+        int a = 0;
+        int b = 1;
+        for (int i = 0; i < 64; i++) {
+            if (i % 2 == a) {
+                boardGrid.getComponent(i).setBackground(Color.black);
+            }
+            else {
+                boardGrid.getComponent(i).setBackground(Color.white);
+            }
+            if (i % 8 == 7) {
+                int temp = a;
+                a = b;
+                b = temp;
+            }
         }
     }
 }
