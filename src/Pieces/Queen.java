@@ -48,10 +48,10 @@ public class Queen extends Piece {
                 } else if (!board.getTileAt(x + dirx, y + diry).getPieceontile().getColor().equals(color)) {
                     if (board.isKingOnTile(board.getTileAt(x + dirx, y + diry))) {
                         if (color.equals(Color.black)) {
-                            board.getB_PiecesTargetingKing().add(this);
+                            board.getBlackPiecesTargetingKing().add(this);
                         }
                         else {
-                            board.getW_PiecesTargetingKing().add(this);
+                            board.getWhitePiecesTargetingKing().add(this);
                         }
                     }
                     else {

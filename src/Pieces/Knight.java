@@ -37,10 +37,10 @@ public class Knight extends Piece {
                     } else if (!board.getTileAt(x + vertical[i], y - 1).getPieceontile().getColor().equals(color)) {
                         if (board.getPieceAt(x + vertical[i], y - 1).getClass().equals(King.class)) {
                             if (color.equals(Color.black)) {
-                                board.getB_PiecesTargetingKing().add(this);
+                                board.getBlackPiecesTargetingKing().add(this);
                             }
                             else {
-                                board.getW_PiecesTargetingKing().add(this);
+                                board.getWhitePiecesTargetingKing().add(this);
                             }
                         }
                         else {
@@ -54,10 +54,10 @@ public class Knight extends Piece {
                     } else if (!board.getTileAt(x + vertical[i], y + 1).getPieceontile().getColor().equals(color)) {
                         if (board.isKingOnTile(board.getTileAt(x + vertical[i], y + 1))) {
                             if (color.equals(Color.black)) {
-                                board.getB_PiecesTargetingKing().add(this);
+                                board.getBlackPiecesTargetingKing().add(this);
                             }
                             else {
-                                board.getW_PiecesTargetingKing().add(this);
+                                board.getWhitePiecesTargetingKing().add(this);
                             }
                         }
                         else {
@@ -74,10 +74,10 @@ public class Knight extends Piece {
                     } else if (!board.getTileAt(x + vertical[i], y - 2).getPieceontile().getColor().equals(color)) {
                         if (board.isKingOnTile(board.getTileAt(x + vertical[i], y - 2))) {
                             if (color.equals(Color.black)) {
-                                board.getB_PiecesTargetingKing().add(this);
+                                board.getBlackPiecesTargetingKing().add(this);
                             }
                             else {
-                                board.getW_PiecesTargetingKing().add(this);
+                                board.getWhitePiecesTargetingKing().add(this);
                             }
                         }
                         else {
@@ -91,10 +91,10 @@ public class Knight extends Piece {
                     } else if (!board.getTileAt(x + vertical[i], y + 2).getPieceontile().getColor().equals(color)) {
                         if (board.isKingOnTile(board.getTileAt(x + vertical[i], y + 2))) {
                             if (color.equals(Color.black)) {
-                                board.getB_PiecesTargetingKing().add(this);
+                                board.getBlackPiecesTargetingKing().add(this);
                             }
                             else {
-                                board.getW_PiecesTargetingKing().add(this);
+                                board.getWhitePiecesTargetingKing().add(this);
                             }
                         }
                         else {

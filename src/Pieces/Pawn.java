@@ -42,10 +42,10 @@ public class Pawn extends Piece {
                     if (!board.colorAtPosition(x + 1, y + 1).equals(color)) {
                         if (board.isKingOnTile(board.getTileAt(x + 1, y + 1))) {
                             if (color.equals(Color.black)) {
-                                board.getB_PiecesTargetingKing().add(this);
+                                board.getBlackPiecesTargetingKing().add(this);
                             }
                             else {
-                                board.getW_PiecesTargetingKing().add(this);
+                                board.getWhitePiecesTargetingKing().add(this);
                             }
                         }
                         else {
@@ -59,10 +59,10 @@ public class Pawn extends Piece {
                     if (!board.colorAtPosition(x + 1, y - 1).equals(color)) {
                         if (board.isKingOnTile(board.getTileAt(x + 1, y - 1))) {
                             if (color.equals(Color.black)) {
-                                board.getB_PiecesTargetingKing().add(this);
+                                board.getBlackPiecesTargetingKing().add(this);
                             }
                             else {
-                                board.getW_PiecesTargetingKing().add(this);
+                                board.getWhitePiecesTargetingKing().add(this);
                             }
                         }
                         else {
@@ -88,10 +88,10 @@ public class Pawn extends Piece {
                     if (!board.colorAtPosition(x - 1, y + 1).equals(color)) {
                         if (board.isKingOnTile(board.getTileAt(x - 1, y + 1))) {
                             if (color.equals(Color.black)) {
-                                board.getB_PiecesTargetingKing().add(this);
+                                board.getBlackPiecesTargetingKing().add(this);
                             }
                             else {
-                                board.getW_PiecesTargetingKing().add(this);
+                                board.getWhitePiecesTargetingKing().add(this);
                             }
                         }
                         else {
@@ -105,10 +105,10 @@ public class Pawn extends Piece {
                     if (!board.colorAtPosition(x - 1, y - 1).equals(color)) {
                         if (board.isKingOnTile(board.getTileAt(x - 1, y - 1))) {
                             if (color.equals(Color.black)) {
-                                board.getB_PiecesTargetingKing().add(this);
+                                board.getBlackPiecesTargetingKing().add(this);
                             }
                             else {
-                                board.getW_PiecesTargetingKing().add(this);
+                                board.getWhitePiecesTargetingKing().add(this);
                             }
                         }
                         else {

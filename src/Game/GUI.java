@@ -60,7 +60,7 @@ public class GUI implements MouseListener {
         buttonGrid.init();
         window.add(boardGrid);
         window.setSize(width, height);
-        window.getContentPane().setPreferredSize(new Dimension(900, 600));
+        window.getContentPane().setPreferredSize(new Dimension(800, 800));
         visible();
     }
 
@@ -81,7 +81,7 @@ public class GUI implements MouseListener {
             int y = 7 - e.getComponent().getY() / e.getComponent().getHeight();
             int rowidx = 7 - y;
             int colidx = x;
-            Tile clickedTile = game.getBoard().getTiles()[rowidx][colidx];
+            Tile clickedTile = game.getBoard().getTileAt(rowidx, colidx);
             if (!game.isSelected()) {
                 if (clickedTile.canSelect()) {
                     selectPiece(e.getComponent(), game, rowidx, colidx);
@@ -144,7 +144,7 @@ public class GUI implements MouseListener {
     public void addPieceTexture(JPanel boardgrid, Piece selectedpiece, int row, int col) {
         int component_idx = row * 8 + col;
         ((JPanel) boardgrid.getComponent(component_idx)).remove(0);
-        ((JPanel) boardgrid.getComponent(component_idx)).add(new JLabel(TextureLoader.transformImage(selectedpiece.getID(), 50, 50)));
+        ((JPanel) boardgrid.getComponent(component_idx)).add(new JLabel(TextureLoader.transformImage(selectedpiece.getID(), 40, 40)));
     }
 
     public void removePieceTexture(JPanel boardgrid, int row, int col) {

@@ -10,21 +10,17 @@ public class TextureLoader {
     }
     public void loadChessBoard() {
 //        clearRemainingTextures();
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < 64; i++) {
             ((JPanel) game.getGUI().getBoardGrid().getComponent(i)).remove(0);
-            ((JPanel) game.getGUI().getBoardGrid().getComponent(i)).add(new JLabel(transformImage(game.getBoard().getTiles()[i / 8][i % 8].getPieceontile().getID(), 40, 40)));
+            if (game.getBoard().getPieceAt(i / 8, i % 8) != null) {
+                ((JPanel) game.getGUI().getBoardGrid().getComponent(i)).add(new JLabel(transformImage(game.getBoard().getPieceAt(i / 8, i % 8).getID(), 40, 40)));
+            }
+            else {
+                ((JPanel) game.getGUI().getBoardGrid().getComponent(i)).add(new JLabel());
+            }
         }
 
-        for (int i = 16; i < 48; i++) {
-            ((JPanel) game.getGUI().getBoardGrid().getComponent(i)).remove(0);
-            ((JPanel) game.getGUI().getBoardGrid().getComponent(i)).add(new JLabel());
-        }
-
-        for (int i = 48; i < 64; i++) {
-            ((JPanel) game.getGUI().getBoardGrid().getComponent(i)).remove(0);
-            ((JPanel) game.getGUI().getBoardGrid().getComponent(i)).add(new JLabel(transformImage(game.getBoard().getTiles()[i / 8][i % 8].getPieceontile().getID(), 40, 40)));
-        }
-        game.getGUI().rePaintBoard();
+        game.getGUI().resetBoardColors();
         game.getGUI().visible();
     }
 

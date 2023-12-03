@@ -3,22 +3,23 @@ package Game;
 import Pieces.*;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Board {
+public class Board implements Serializable {
     private Tile[][] tiles;
     private ArrayList<Piece> piecesInPlay;
-    private ArrayList<Piece> w_Pieces;
-    private ArrayList<Piece> b_Pieces;
-    private ArrayList<Piece> w_PiecesTargetingKing;
-    private ArrayList<Piece> b_PiecesTargetingKing;
+    private ArrayList<Piece> whitePieces;
+    private ArrayList<Piece> blackPieces;
+    private ArrayList<Piece> whitePiecesTargetingKing;
+    private ArrayList<Piece> blackPiecesTargetingKing;
     public Board() {
         tiles = new Tile[8][8];
         piecesInPlay = new ArrayList<>();
-        w_Pieces = new ArrayList<>();
-        b_Pieces = new ArrayList<>();
-        w_PiecesTargetingKing = new ArrayList<>();
-        b_PiecesTargetingKing = new ArrayList<>();
+        whitePieces = new ArrayList<>();
+        blackPieces = new ArrayList<>();
+        whitePiecesTargetingKing = new ArrayList<>();
+        blackPiecesTargetingKing = new ArrayList<>();
         int a = 0;
         int b = 1;
         for (int i = 0; i < 8; i++) {
@@ -36,6 +37,38 @@ public class Board {
             a = b;
             b = temp;
         }
+        placePieces();
+        collectPiecesInPlay();
+        updateMovableTiles();
+    }
+
+    /**
+     * @brief Végigmegy a mezőkön és összegyűjti a játékban lévő bábukat, amiket berak egy közös piecesInPlay listába, és színtől függően vagy a blackPieces, vagy a whitePieces listába
+     *
+     */
+    public void collectPiecesInPlay() {
+        piecesInPlay = new ArrayList<>();
+        whitePieces = new ArrayList<>();
+        blackPieces = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (tiles[i][j].getPieceontile() != null) {
+                    piecesInPlay.add(tiles[i][j].getPieceontile());
+                    if (tiles[i][j].getPieceontile().getColor().equals(Color.white)) {
+                        whitePieces.add(tiles[i][j].getPieceontile());
+                    }
+                    else {
+                        blackPieces.add(tiles[i][j].getPieceontile());
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @brief Beállítja az alapfelállást a táblán
+     */
+    private void placePieces() {
         tiles[0][0].setPieceontile(new Rook(Color.black, new Point(0, 0)));
         tiles[0][1].setPieceontile(new Knight(Color.black, new Point(0, 1)));
         tiles[0][2].setPieceontile(new Bishop(Color.black, new Point(0, 2)));
@@ -71,65 +104,56 @@ public class Board {
         tiles[6][5].setPieceontile(new Pawn(Color.white, new Point(6, 5)));
         tiles[6][6].setPieceontile(new Pawn(Color.white, new Point(6, 6)));
         tiles[6][7].setPieceontile(new Pawn(Color.white, new Point(6, 7)));
-        collectPiecesInPlay();
-        updateMovableTiles();
+
+//        tiles[7][7].setPieceontile(new King(Color.white, new Point(7, 7)));
+//        tiles[5][7].setPieceontile(new Pawn(Color.white, new Point(5, 7)));
+//        tiles[6][6].setPieceontile(new Rook(Color.black, new Point(6, 6)));
+//        tiles[5][5].setPieceontile(new Bishop(Color.black, new Point(5, 5)));
     }
 
-
-    public void collectPiecesInPlay() {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (tiles[i][j].getPieceontile() != null) {
-                    piecesInPlay.add(tiles[i][j].getPieceontile());
-                    if (tiles[i][j].getPieceontile().getColor().equals(Color.white)) {
-                        w_Pieces.add(tiles[i][j].getPieceontile());
-                    }
-                    else {
-                        b_Pieces.add(tiles[i][j].getPieceontile());
-                    }
-                }
-            }
-        }
-    }
-
+    /**
+     * @brief Minden lépés után összegyűjti a soron következő játékos bábuinak lehetséges lépéseit.
+     */
     public void updateMovableTiles() {
         for (Piece piece : piecesInPlay) {
             piece.collectMovableTiles(this);
         }
         if (Game.colorinplay.equals(Color.white)) {
-            for (Piece piece: w_Pieces) {
+            for (Piece piece: whitePieces) {
                 Point origin = piece.getTileindex();
                 ArrayList<Tile> legalTiles = new ArrayList<>();
                 for (Tile tile: piece.getMovableTiles()) {
-                    b_PiecesTargetingKing.clear();
+                    blackPiecesTargetingKing.clear();
                     Piece removedPiece = null;
                     if (!getTileAt(tile.getX(), tile.getY()).isEmpty()) {
                         removedPiece = getPieceAt(tile.getX(), tile.getY());
                     }
                     setPiece(piece, tile.getX(), tile.getY());
                     collectTiles(Color.black);
-                    testPosition(piece, origin, legalTiles, tile, removedPiece, b_PiecesTargetingKing, b_Pieces);
+                    testPosition(piece, origin, legalTiles, tile, removedPiece, blackPiecesTargetingKing, blackPieces);
                 }
                 piece.setLegalMoves(legalTiles);
             }
+            blackPiecesTargetingKing.clear();
             collectTiles(Color.black);
         }
         else if (Game.colorinplay.equals(Color.black)) {
-            for (Piece piece: b_Pieces) {
+            for (Piece piece: blackPieces) {
                 Point origin = piece.getTileindex();
                 ArrayList<Tile> legalTiles = new ArrayList<>();
                 for (Tile tile: piece.getMovableTiles()) {
-                    w_PiecesTargetingKing.clear();
+                    whitePiecesTargetingKing.clear();
                     Piece removedPiece = null;
                     if (!getTileAt(tile.getX(), tile.getY()).isEmpty()) {
                         removedPiece = getPieceAt(tile.getX(), tile.getY());
                     }
                     setPiece(piece, tile.getX(), tile.getY());
                     collectTiles(Color.white);
-                    testPosition(piece, origin, legalTiles, tile, removedPiece, w_PiecesTargetingKing, w_Pieces);
+                    testPosition(piece, origin, legalTiles, tile, removedPiece, whitePiecesTargetingKing, whitePieces);
                 }
                 piece.setLegalMoves(legalTiles);
             }
+            whitePiecesTargetingKing.clear();
             collectTiles(Color.white);
         }
     }
@@ -148,6 +172,10 @@ public class Board {
 
     public Tile[][] getTiles() {
         return tiles;
+    }
+
+    public void setTiles(Tile[][] tiles) {
+        this.tiles = tiles;
     }
 
     public Tile getTileAt(int x, int y) {
@@ -180,10 +208,10 @@ public class Board {
             getTileAt(x, y).setPieceontile(null);
             piecesInPlay.remove(piece);
             if (piece.getColor().equals(Color.white)) {
-                w_Pieces.remove(piece);
+                whitePieces.remove(piece);
             }
             else {
-                b_Pieces.remove(piece);
+                blackPieces.remove(piece);
             }
         }
     }
@@ -197,12 +225,12 @@ public class Board {
         }
     }
 
-    public ArrayList<Piece> getB_PiecesTargetingKing() {
-        return b_PiecesTargetingKing;
+    public ArrayList<Piece> getBlackPiecesTargetingKing() {
+        return blackPiecesTargetingKing;
     }
 
-    public ArrayList<Piece> getW_PiecesTargetingKing() {
-        return w_PiecesTargetingKing;
+    public ArrayList<Piece> getWhitePiecesTargetingKing() {
+        return whitePiecesTargetingKing;
     }
 
     public boolean isKingOnTile(Tile tile) {
@@ -211,33 +239,33 @@ public class Board {
 
     public boolean isKingInCheck(Color color) {
         if (color.equals(Color.black)) {
-            return !w_PiecesTargetingKing.isEmpty();
+            return !whitePiecesTargetingKing.isEmpty();
         }
         else {
-            return !b_PiecesTargetingKing.isEmpty();
+            return !blackPiecesTargetingKing.isEmpty();
         }
     }
 
     public void collectTiles(Color color) {
         if (color.equals(Color.white)) {
-            for (Piece piece: w_Pieces) {
+            for (Piece piece: whitePieces) {
                 piece.collectMovableTiles(this);
             }
         }
         else if (color.equals(Color.black))
-            for (Piece piece: b_Pieces) {
+            for (Piece piece: blackPieces) {
                 piece.collectMovableTiles(this);
             }
         }
         public boolean isMate() {
             if (isKingInCheck(Game.colorinplay)) {
                 if (Game.colorinplay.equals(Color.white)) {
-                    if (hasMovableTiles(w_Pieces)) {
+                    if (hasMovableTiles(whitePieces)) {
                         return false;
                     }
                 }
                 else {
-                    if (hasMovableTiles(b_Pieces)) {
+                    if (hasMovableTiles(blackPieces)) {
                         return false;
                     }
                 }
@@ -249,12 +277,12 @@ public class Board {
         public boolean isStalemate() {
             if (!isKingInCheck(Game.colorinplay)) {
                 if (Game.colorinplay.equals(Color.white)) {
-                    if (hasMovableTiles(w_Pieces)) {
+                    if (hasMovableTiles(whitePieces)) {
                         return false;
                     }
                 }
                 else {
-                    if (hasMovableTiles(b_Pieces)) {
+                    if (hasMovableTiles(blackPieces)) {
                         return false;
                     }
                 }
@@ -270,6 +298,14 @@ public class Board {
                 }
             }
             return false;
+        }
+
+        public void clearBoard() {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    removePiece(getPieceAt(i, j));
+                }
+            }
         }
     }
 

@@ -2,22 +2,30 @@ package Game;
 
 import Pieces.Piece;
 
-import javax.swing.*;
 import java.awt.*;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
+import java.util.HashMap;
+import java.util.Objects;
 
 public class Game {
-    private GUI gui = new GUI(this);
-    private Board board = new Board();
-    private boolean selected = false;
-    private Piece selectedpiece = null;
+    private GUI gui;
+    private Board board;
+    private boolean selected;
+    private Piece selectedpiece;
     public static Color colorinplay = Color.white;
-    private boolean gameOver = false;
-    private String whitePlayerName, blackPlayerName;
-    private TextureLoader textureLoader = new TextureLoader(this);
+    private boolean gameOver;
+    private TextureLoader textureLoader;
+    private CurrentPlayState playState;
+
+    public Game() {
+        gui = new GUI(this);
+        board = new Board();
+        textureLoader = new TextureLoader(this);
+        selected = false;
+        selectedpiece = null;
+        gameOver = false;
+
+    }
     public void start() {
         gui.initwindow();
         textureLoader.loadChessBoard();
@@ -66,20 +74,18 @@ public class Game {
     public void setGameOver(boolean gameOver) {
         this.gameOver = gameOver;
     }
-    public void end(String result) { setGameOver(true); }
+    public void end(String result) {
+        setGameOver(true);
+        System.out.println("Game ended by: " + result);
+    }
 
-    public void setPlayerName(Color color, String name) {
-        if (color.equals(Color.white)) {
-            whitePlayerName = name;
-        }
-        else {
-            blackPlayerName = name;
-        }
+    public TextureLoader getTextureLoader() {
+        return textureLoader;
     }
 
     public void reset() {
-        this.board = new Board();
         colorinplay = Color.white;
+        this.board = new Board();
         this.selectedpiece = null;
         this.selected = false;
         this.gameOver = false;
@@ -87,7 +93,39 @@ public class Game {
 
     }
 
-    public void save() throws IOException {
-        ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("save" + 1 + ".txt"));
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+
+    public void save(int saveNumber) throws IOException {
+            playState = new CurrentPlayState(colorinplay, getBoard());
+            ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("saves/save" + saveNumber + ".txt"));
+            outputStream.writeObject(playState);
+            outputStream.close();
+
+    }
+
+    public void load(int saveNumber) throws IOException, ClassNotFoundException {
+        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("saves/save" + saveNumber + ".txt"));
+        CurrentPlayState currentPlayState = (CurrentPlayState) inputStream.readObject();
+        Board gameBoard = currentPlayState.getBoard();
+        Color color = currentPlayState.getColorInPLay();
+        setBoard(gameBoard);
+        getBoard().updateMovableTiles();
+        colorinplay = color;
+        textureLoader.loadChessBoard();
+        inputStream.close();
+
+    }
+
+    public void delete(int saveNumber) {
+        File saveFolder = new File("saves");
+        File saves[] = saveFolder.listFiles();
+        assert saves != null;
+        for (File file: saves) {
+            if (file.getName().contains(String.valueOf(saveNumber))) {
+                file.delete();
+            }
+        }
     }
 }
