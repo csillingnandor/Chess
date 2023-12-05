@@ -74,6 +74,11 @@ public class Game {
     public void setGameOver(boolean gameOver) {
         this.gameOver = gameOver;
     }
+
+    /**
+     * Leállítja a játékot, majd kiírja a játék végeredményét szabványos kimenetre
+     * @param result
+     */
     public void end(String result) {
         setGameOver(true);
         System.out.println("Game ended by: " + result);
@@ -83,6 +88,9 @@ public class Game {
         return textureLoader;
     }
 
+    /**
+     * Visszaállítja a táblát a kiindulási állapotba
+     */
     public void reset() {
         colorinplay = Color.white;
         this.board = new Board();
@@ -97,6 +105,11 @@ public class Game {
         this.board = board;
     }
 
+    /**
+     * Lementi a jelenlegi játékállást
+     * @param saveNumber
+     * @throws IOException
+     */
     public void save(int saveNumber) throws IOException {
             playState = new CurrentPlayState(colorinplay, getBoard());
             ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("saves/save" + saveNumber + ".txt"));
@@ -105,6 +118,12 @@ public class Game {
 
     }
 
+    /**
+     * Betölt egy lementett játékállást
+     * @param saveNumber
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void load(int saveNumber) throws IOException, ClassNotFoundException {
         ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("saves/save" + saveNumber + ".txt"));
         CurrentPlayState currentPlayState = (CurrentPlayState) inputStream.readObject();
@@ -118,6 +137,10 @@ public class Game {
 
     }
 
+    /**
+     * Kitöröl egy játékot a mentések közül
+     * @param saveNumber
+     */
     public void delete(int saveNumber) {
         File saveFolder = new File("saves");
         File saves[] = saveFolder.listFiles();

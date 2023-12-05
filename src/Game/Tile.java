@@ -29,10 +29,18 @@ public class Tile implements Serializable {
         this.color = color;
     }
 
+    /**
+     * Eldönti, az adott mező üres-e
+     * @return true, ha a mező üres, false, ha a mező nem üres
+     */
     public boolean isEmpty() {
         return pieceontile == null;
     }
 
+    /**
+     * Eldönti a mezőn lévő báburól, hogy kiválasztható-e
+     * @return true, ha kiválasztható, false, ha nem választható ki
+     */
     public boolean canSelect() {
         return (!isEmpty() && getPieceontile().getColor().equals(Game.colorinplay));
     }

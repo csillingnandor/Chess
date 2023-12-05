@@ -8,8 +8,11 @@ public class TextureLoader {
     public TextureLoader(Game game) {
         this.game = game;
     }
+
+    /**
+     * Kirajzolja a sakktáblára a bábukat
+     */
     public void loadChessBoard() {
-//        clearRemainingTextures();
         for (int i = 0; i < 64; i++) {
             ((JPanel) game.getGUI().getBoardGrid().getComponent(i)).remove(0);
             if (game.getBoard().getPieceAt(i / 8, i % 8) != null) {
@@ -24,6 +27,13 @@ public class TextureLoader {
         game.getGUI().visible();
     }
 
+    /**
+     * A bemenetként megkapott kép felbontását átalakítja a paraméterként kapott szélesség-maasság értékekre
+     * @param imagepath
+     * @param nwidth
+     * @param nheight
+     * @return
+     */
     public static ImageIcon transformImage(String imagepath, int nwidth, int nheight) {
         ImageIcon imageIcon = new ImageIcon(imagepath);
         Image image = imageIcon.getImage();
@@ -32,9 +42,4 @@ public class TextureLoader {
         return imageIcon;
     }
 
-    public void clearRemainingTextures() {
-        for (int i = 0; i < 64; i++) {
-            ((JPanel) game.getGUI().getBoardGrid().getComponent(i)).remove(0);
-        }
-    }
 }

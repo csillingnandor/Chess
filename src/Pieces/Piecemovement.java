@@ -6,5 +6,9 @@ import Game.Tile;
 import java.util.ArrayList;
 
 public interface Piecemovement {
-    public void collectMovableTiles(Board board);
+    /**
+     * Az adott bábuval definiált mozgással bejárja a táblát, és összeyűjti a lehetséges lépéseket
+     * @param board
+     */
+    void collectMovableTiles(Board board);
 }

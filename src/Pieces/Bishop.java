@@ -34,7 +34,15 @@ public class Bishop extends Piece {
 
     }
 
-
+    /**
+     * Egy adott átlós irányban bejárja a táblát, és összegyűjti azokat a mezőket, amikre tud lépni
+     * @param board
+     * @param tiles
+     * @param x
+     * @param y
+     * @param dirx
+     * @param diry
+     */
     private void bishopTraverse(Board board, ArrayList<Tile> tiles, int x, int y, int dirx, int diry) {
         try {
             if (board.isTileInsideBounds(x + dirx, y + diry)) {
